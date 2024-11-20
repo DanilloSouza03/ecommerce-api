@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user
+from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'chave_secreta_123'
@@ -118,6 +118,20 @@ def get_products():
         list_products.append(data_product)
 
     return jsonify(list_products)
+
+@app.route('/api/cart/add/<int:product_id>', methods=['POST'])
+@login_required
+def add_to_cart(product_id):
+    user = User.query.get(int(current_user.id))
+    product = Product.query.get(product_id)
+
+    if user and product:
+        cart_item = CartItem(user_id=user.id, product_id=product.id)
+        db.session.add(cart_item)
+        db.session.commit()
+        return jsonify({"message": "Item added to the cart successfully!"})
+    return jsonify({"message": "Failed to add the cart!"}), 400
+    
 
 @app.route('/')
 def saudar():
