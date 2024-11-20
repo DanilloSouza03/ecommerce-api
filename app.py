@@ -63,7 +63,20 @@ def update_product(product_id):
     
     return jsonify({"message": "Product modified successfully!"})
 
+@app.route('/api/products', methods=["GET"])
+def get_products():
+    products = Product.query.all()
+    
+    list_products = []
+    for product in products:
+        data_product = {
+        'id': product.id,
+        'name': product.name,
+        'price': product.price,
+        }
+        list_products.append(data_product)
 
+    return jsonify(list_products)
 
 @app.route('/')
 def saudar():
