@@ -132,7 +132,6 @@ def add_to_cart(product_id):
         return jsonify({"message": "Item added to the cart successfully!"})
     return jsonify({"message": "Failed to add the cart!"}), 400
 
-
 @app.route('/api/cart/remove/<int:product_id>', methods=["DELETE"])
 @login_required
 def remove_from_cart(product_id):
@@ -142,6 +141,17 @@ def remove_from_cart(product_id):
         db.session.commit()
         return jsonify({"message": "Item removed from the cart successfully!"})
     return jsonify({"message": "Failed to remove item from the cart!"}), 400
+
+@app.route('/api/cart', methods=['GET'])
+@login_required
+def view_cart():
+    user = User.query.get(int(current_user.id))
+    cart_items = user.cart
+    list_cart = []
+    for item in cart_items:
+        product = Product.query.get(item.product_id)
+        list_cart.append({"id": item.id, "user_id": item.user_id, "product_id": item.product_id, "product_name": product.name, "product_price": product.price})
+    return jsonify(list_cart)
 
 @app.route('/')
 def saudar():
