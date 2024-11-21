@@ -153,6 +153,16 @@ def view_cart():
         list_cart.append({"id": item.id, "user_id": item.user_id, "product_id": item.product_id, "product_name": product.name, "product_price": product.price})
     return jsonify(list_cart)
 
+@app.route('/api/cart/checkout', methods=["POST"])
+@login_required
+def checkout():
+    user = User.query.get(int(current_user.id))
+    cart_items = user.cart
+    for item in cart_items:
+        db.session.delete(item)
+    db.session.commit()
+    return jsonify({"message": "Checkout successfully. Cart has been cleared."})
+
 @app.route('/')
 def saudar():
     return"Oi!"
