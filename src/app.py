@@ -5,8 +5,8 @@ from src.models.models import db, login_manager, User
 from src.controllers.controllers import api_bp
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'chave_secreta_123'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///ecommerce.db'
+app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
 
 CORS(app)
 
@@ -32,7 +32,7 @@ with app.app_context():
         db.create_all()
         print("Database created successfully!")
     else:
-        print("Dtabase already exists.")
+        print("Database already exists.")
 
 if __name__ == "__main__":
     app.run(debug=True)

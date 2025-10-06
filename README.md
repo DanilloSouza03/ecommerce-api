@@ -49,21 +49,25 @@ A **Ecommerce API** é um sistema backend desenvolvido com **Flask** para gerenc
    ```bash
    git clone https://github.com/DanilloSouza03/ecommerce-api.git
    cd ecommerce-api
-2. Instale o Poetry:
+2. Crie o arquivo .env a partir do exemplo:
+   ```bash
+    copy .env.example .env   # Windows
+    cp .env.example .env # ou no Linux/macOS
+3. Instale o Poetry:
    ```bash
     pip install poetry
-3. Crie e ative o ambiente virtual com Poetry
+4. Crie e ative o ambiente virtual com Poetry
     ```bash
     poetry install      # Cria o ambiente virtual e instala as dependências
     poetry use env
-4. Crie o usuário:
+5. Crie o usuário:
    ```bash
     flask --app src.app shell
     >>> user = User(username="seu user", password="sua senha")
     >>> db.session.add(user)
     >>> db.session.commit()
     >>> exit()
-5. Execute a aplicação:
+6. Execute a aplicação:
    ```bash
     flask --app src.app run 
     flask --app src.app run --debug # Aqui já com o modo debug
