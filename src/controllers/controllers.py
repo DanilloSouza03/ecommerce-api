@@ -1,20 +1,51 @@
 from flask import Blueprint, request, jsonify
 from flask_login import login_user, logout_user, login_required, current_user
+from werkzeug.security import generate_password_hash, check_password_hash
 from src.models.models import db, login_manager, User, Product, CartItem
 
 api_bp = Blueprint('api', __name__)
 
+@api_bp.route('/register',  methods=["POST"])
+def fazer_cadastro():
+    data = request.get_json() or {}
+
+    username = data.get('username')
+    password = data.get('password')
+
+    if not username or not password:
+        return jsonify({"error": "Username and password are required"}), 400
+
+    if User.query.filter_by(username=username).first():
+        return jsonify({"error": "Username already exists"}), 409
+
+    try:
+        hashed_password = generate_password_hash(password)
+        user = User(username=username, password=hashed_password)
+        db.session.add(user)
+        db.session.commit()
+        return jsonify({"message": "User created successfully"}), 201
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"message": "Database error", "details": str(e)}), 500
+
 @api_bp.route('/login', methods=["POST"])
 def login():
-    data = request.json
+    data = request.get_json() or {}
+    username = data.get('username')
+    password = data.get('password')
 
-    user = User.query.filter_by(username=data.get("username")).first()
+    if not username or not password:
+        return jsonify({"error": "Username and password are required"}), 400
 
-    if user and data.get('password') == user.password:
+    user = User.query.filter_by(username=username).first()
+    if not user:
+        return jsonify({"message": "Invalid username or password"}), 401
+
+    if check_password_hash(user.password, password):
         login_user(user)
-        return jsonify({"message": "Logged in sucessfully!"})
-    
-    return jsonify({"message": "Unauthorized. Invalid credentials!"}), 401
+        return jsonify({"message": "Login successful"}), 200
+    else:
+        return jsonify({"message": "Invalid username or password"}), 401
 
 @api_bp.route('/logout', methods=["POST"])
 @login_required
