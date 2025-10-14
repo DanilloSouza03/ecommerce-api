@@ -27,6 +27,9 @@ A **Ecommerce API** é um sistema backend desenvolvido com **Flask** para gerenc
 
 ##  Endpoints
 
+###  Usuários:
+- **POST /register**: Cria um usuário com nome e senha.
+
 ###  Autenticação:
 - **POST /login**: Faz login de um usuário.
 - **POST /logout**: Faz logout de um usuário autenticado.
@@ -64,6 +67,15 @@ A **Ecommerce API** é um sistema backend desenvolvido com **Flask** para gerenc
    ```bash
     flask --app src.app run 
     flask --app src.app run --debug # Aqui já com o modo debug
+
+## Testando a API com Postman
+
+O projeto inclui uma coleção do Postman para facilitar os testes da API.
+
+1. Abra o [Postman](https://www.postman.com/).
+2. Vá em **File > Import**.
+3. Selecione o arquivo localizado em: `postman/Ecommerce-API.postman_collection.json`
+
 <hr>
 <p align="center">
 👨‍💻 @dev.danillo
